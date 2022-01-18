@@ -3,6 +3,9 @@ app = Tk()
 app.title("Project 1 Canvas")
 app.geometry("400x400")
 
+def clear(event):
+    canvas.delete('all')
+
 def get_x_and_y(event):
     global curx, cury
     curx, cury = event.x, event.y
@@ -16,5 +19,6 @@ canvas = Canvas(app, bg='black')
 canvas.pack(anchor='nw', fill='both', expand=1)
 canvas.bind("<Button-1>", get_x_and_y)
 canvas.bind("<B1-Motion>", draw)
+canvas.bind("<Tab>", clear)
 
 app.mainloop()
