@@ -11,7 +11,7 @@ def clear(event):
     # Clear path list
     x_pos.clear()
     y_pos.clear()
-    print(x_pos)
+    # print(x_pos)
 
 def get_x_and_y(event):
     global curx, cury
@@ -24,7 +24,7 @@ def draw(event):
     # Store location of path
     x_pos.append(curx)
     y_pos.append(cury)
-    print(x_pos)
+    # print(x_pos)
 
 canvas = Canvas(app, bg='black')
 canvas.pack(anchor='nw', fill='both', expand=1)
