@@ -6,6 +6,8 @@ app = Tk()
 app.title("Project 1 Canvas")
 app.geometry("400x400")
 
+PHI = 0.5 * (-1.0 + math.sqrt(5.0))
+
 # X and Y point class
 class Point:
     # Initialize point
@@ -18,6 +20,7 @@ class Point:
     # Get Y
     def getY(self):
         return self.y
+
 
 # Class to Hold Drawn Canvas Points
 class Shape:
@@ -39,6 +42,7 @@ class Shape:
             print(self.points[i].getX(), self.points[i].getY())
 
 # Default Set of Templates
+
 
 # Traingle
 triangle = Shape([Point(137, 139),Point(135, 141),Point(133, 144),Point(132, 146),Point(130, 149),Point(128, 151),Point(126, 155),Point(123, 160),Point(120, 166),Point(116, 171),Point(112, 177),Point(107, 183),Point(102, 188),Point(100, 191),Point(95, 195),Point(90, 199),Point(86, 203),Point(82, 206),Point(80, 209),Point(75, 213),Point(73, 213),Point(70, 216),Point(67, 219),Point(64, 221),Point(61, 223),Point(60, 225),Point(62, 226),Point(65, 225),Point(67, 226),Point(74, 226),Point(77, 227),Point(85, 229),Point(91, 230),Point(99, 231),Point(108, 232),Point(116, 233),Point(125, 233),Point(134, 234),Point(145, 233),Point(153, 232),Point(160, 233),Point(170, 234),Point(177, 235),Point(179, 236),Point(186, 237),Point(193, 238),Point(198, 239),Point(200, 237),Point(202, 239),Point(204, 238),Point(206, 234),Point(205, 230),Point(202, 222),Point(197, 216),Point(192, 207),Point(186, 198),Point(179, 189),Point(174, 183),Point(170, 178),Point(164, 171),Point(161, 168),Point(154, 160),Point(148, 155),Point(143, 150),Point(138, 148),Point(136, 148)])
@@ -97,9 +101,11 @@ def clear(event):
     # Clear path list
     drawnShape.clearPoints()
 
+
 def get_x_and_y(event):
     global curx, cury
     curx, cury = event.x, event.y
+
 
 def draw(event):
     global curx, cury
@@ -111,8 +117,10 @@ def draw(event):
 # $1 Gesture Recognition
 # Step 1 Resample Path
 
+
 def distance(p1, p2):
     return math.sqrt((p1.x - p2.x)**2 + (p1.y - p2.y)**2)
+
 
 def pathLength(points):
     length = 0
@@ -121,6 +129,7 @@ def pathLength(points):
             break
         length += distance(points[i], points[i+1])
     return length
+
 
 def resample(points, n):
     I = pathLength(points) / (n - 1)
@@ -139,6 +148,7 @@ def resample(points, n):
                 D += d
     return newPoints
 
+
 # Step 2 Rotate points so indicative angle is 0
 # calculate centroid of points
 def centroid(points):
@@ -149,6 +159,7 @@ def centroid(points):
         y += p.y
     return Point(x/len(points), y/len(points))
 
+
 def rotateBy(points, theta):
     c = centroid(points)
     newPoints = []
@@ -157,6 +168,7 @@ def rotateBy(points, theta):
         qy = (p.x - c.x) * math.sin(theta) + (p.y - c.y) * math.cos(theta) + c.y
         newPoints.append(Point(qx,qy))
     return newPoints
+
 
 def rotateToZero(points):
     c = centroid(points)
@@ -198,6 +210,51 @@ def translateToOrigin(points):
     return newPoints
 
 # Step 4 match templates
+
+def recognize(points, T):
+    b = math.inf
+    negTheta = -45
+    posTheta = 45
+    threshold = -2
+    size = 250
+    for i in range(len(T)):
+        d = distanceAtBestAngle(points, T, negTheta, posTheta, threshold)
+        if(d < b):
+            b = d
+            curTemplate = T[i]
+    score = 1 - b / 0.5 * math.sqrt(size^2 + size^2)
+    return T[i], score
+
+def distanceAtBestAngle(points, T, thetaA, thetaB, threshold):
+    x1 = PHI * thetaA + (1.0 - PHI) * thetaB
+    f1 = distanceAtAngle(points, T, x1)
+    x2 = (1.0 - PHI) * thetaA + PHI * thetaB
+    f2 = distanceAtAngle(points, T, x2)
+    while(abs(thetaB - thetaA) > threshold):
+        if(f1 < f2):
+            thetaB = x2
+            x2 = x1
+            f2 = f1
+            x1 = PHI * thetaA + (1.0 - PHI) * thetaB
+            f1 = distanceAtAngle(points, T, x1)
+        else:
+            thetaA = x1
+            x1 = x2
+            f1 = f2
+            x2 = (1.0 - PHI) * thetaA + PHI * thetaB
+            f2 = distanceAtAngle(points, T, x2)
+    return min(f1, f2)
+
+def distanceAtAngle(points, T, theta):
+    newPoints = rotateBy(points, theta)
+    return pathDistance(newPoints, T)
+
+def pathDistance(pointsA, pointsB):
+    d = 0
+    for i in range(len(pointsA)):
+        d = d + distance(pointsA[i], pointsB[i])
+    return d / len(pointsA)
+
 
 canvas = Canvas(app, bg='black')
 canvas.pack(anchor='nw', fill='both', expand=1)
