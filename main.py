@@ -1,3 +1,4 @@
+from contextvars import copy_context
 import math
 from tkinter import *
 from turtle import shape
@@ -139,6 +140,29 @@ def resample(points, n):
     return newPoints
 
 # Step 2 Rotate points so indicative angle is 0
+# calculate centroid of points
+def centroid(points):
+    x = 0
+    y = 0
+    for p in points:
+        x += p.x
+        y += p.y
+    return Point(x/len(points), y/len(points))
+
+def rotateBy(points, theta):
+    c = centroid(points)
+    newPoints = []
+    for p in points:
+        qx = (p.x - c.x) * math.cos(theta) - (p.y - c.y) * math.sin(theta) + c.x
+        qy = (p.x - c.x) * math.sin(theta) + (p.y - c.y) * math.cos(theta) + c.y
+        newPoints.append(Point(qx,qy))
+    return newPoints
+
+def rotateToZero(points):
+    c = centroid(points)
+    theta = math.atan2(c.y - points[0].y, c.x - points[0].x)
+    newPoints = rotateBy(points, -theta)
+    return newPoints
 
 # Step 3 scale
 
