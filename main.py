@@ -1,3 +1,4 @@
+import math
 from tkinter import *
 from turtle import shape
 app = Tk()
@@ -108,6 +109,34 @@ def draw(event):
 
 # $1 Gesture Recognition
 # Step 1 Resample Path
+
+def distance(p1, p2):
+    return math.sqrt((p1.x - p2.x)**2 + (p1.y - p2.y)**2)
+
+def pathLength(points):
+    length = 0
+    for i in range(len(points)):
+        if i == len(points) - 1:
+            break
+        length += distance(points[i], points[i+1])
+    return length
+
+def resample(points, n):
+    I = pathLength(points) / (n - 1)
+    D = 0
+    newPoints = []
+    for i in range(len(points)):
+        if i >= 1:
+            d = distance(points[i-1], points[i])
+            if ((D + d) >= I):
+                qx = points[i-1].x + ((I - D) / d) * (points[i].x - points[i-1].x)
+                qy = points[i-1].y + ((I - D) / d) * (points[i].y - points[i-1].y)
+                newPoints.append(Point(qx,qy))
+                points.insert(i, Point(qx,qy))
+                D = 0
+            else:
+                D += d
+    return newPoints
 
 # Step 2 Rotate points so indicative angle is 0
 
