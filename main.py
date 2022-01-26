@@ -165,6 +165,37 @@ def rotateToZero(points):
     return newPoints
 
 # Step 3 scale
+def boundingBox(points):
+    minx = points[0].x
+    miny = points[0].y
+    maxx = points[0].x
+    maxy = points[0].y
+    for p in points:
+        minx = min(minx, p.x)
+        miny = min(miny, p.y)
+        maxx = max(maxx, p.x)
+        maxy = max(maxy, p.y)
+    return (Point(minx, miny), Point(maxx, maxy))
+
+def scaleToSquare(points, size):
+    B = boundingBox(points)
+    bWidth = B[1].x - B[0].x
+    bHeight = B[1].y - B[0].y
+    newPoints = []
+    for p in points:
+        qx = p.x * (size / bWidth)
+        qy = p.y * (size / bHeight)
+        newPoints.append(Point(qx,qy))
+    return newPoints
+
+def translateToOrigin(points):
+    c = centroid(points)
+    newPoints = []
+    for p in points:
+        qx = p.x - c.x
+        qy = p.y - c.y
+        newPoints.append(Point(qx,qy))
+    return newPoints
 
 # Step 4 match templates
 
