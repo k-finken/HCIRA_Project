@@ -293,16 +293,16 @@ def findMatch(event):
 
     for i in range(len(processedTemplates)):
         if(processedTemplates[i] == match):
+            canvas.create_text(200, 50, text="Your drawing matches: " + templateNames[i], fill="black", font=('Helvetica 15 bold'))
             print(templateNames[i])
             break
+canvas = Canvas(app, bg='grey')
 
-
-canvas = Canvas(app, bg='black')
 canvas.pack(anchor='nw', fill='both', expand=1)
 canvas.bind("<Button-1>", get_x_and_y)
 canvas.bind("<B1-Motion>", draw)
 # canvas.bind("<Tab>", clear)
 app.bind("<Tab>", clear)
-app.bind("a", findMatch)
+app.bind("<ButtonRelease-1>", findMatch)
 
 app.mainloop()
