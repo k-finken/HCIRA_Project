@@ -98,7 +98,6 @@ def clear(event):
     canvas.delete('all')
     # Clear path list
     drawnShape.clearPoints()
-    print("Cleared")
 
 
 def get_x_and_y(event):
@@ -268,33 +267,23 @@ for template in starterTemplates:
     translateToOriginPoints = translateToOrigin(scaledTemplatePoints)
     processedTemplates.append(Shape(translateToOriginPoints))
 
-templateNames = ["triangle", "x", "rectangle", "circle", "check", "caret", "zigZag", "arrow", "leftSquareBracket", "rightSquareBracket", "v", "delete", "leftCurlyBrace", "rightCurlyBrace", "star", "pigTail"]
+templateNames = ["triangle", "x", "rectangle", "circle", "check", "caret", "zigZag", "arrow", "left Square Bracket", "right Square Bracket", "v", "delete", "left Curly Brace", "right Curly Brace", "star", "pig Tail"]
 
 # ### Everything Below should be repeated for each gesture
 
 def findMatch(event):
-    print("Processing...")
-    print("\n")
     # Preprocess drawnShape
     resampledDrawnShapePoints = resample(drawnShape.getPoints(), 64)
     rotatedDrawnShapePoints = rotateToZero(resampledDrawnShapePoints)
     scaledDrawnShapePoints = scaleToSquare(rotatedDrawnShapePoints, 150)
     translateToOriginPoints = translateToOrigin(scaledDrawnShapePoints)
 
-    print("Recognizing...")
-    print("\n")
-
     match, score = recognize(translateToOriginPoints, processedTemplates)
-
-    print("Recognized!")
-    print("\n")
-
     # TODO: Iterate through templates and find name
 
     for i in range(len(processedTemplates)):
         if(processedTemplates[i] == match):
-            canvas.create_text(200, 50, text="Your drawing matches: " + templateNames[i], fill="black", font=('Helvetica 15 bold'))
-            print(templateNames[i])
+            canvas.create_text(200, 50, text="Your drawing matches: " + templateNames[i], fill="black", font=('Helvetica 12 bold'))
             break
 canvas = Canvas(app, bg='grey')
 
