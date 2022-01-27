@@ -119,31 +119,35 @@ PHI = 0.5 * (-1.0 + math.sqrt(5.0))
 
 # Step 1 Resample Path
 def distance(p1, p2):
-    return math.sqrt((p1.x - p2.x)**2 + (p1.y - p2.y)**2)
+    dx = p2.x - p1.x
+    dy = p2.y - p1.y
+    return math.sqrt(dx*dx + dy*dy)
 
 def pathLength(points):
-    length = 0
-    for i in range(len(points)):
-        if i == len(points) - 1:
-            break
-        length += distance(points[i], points[i+1])
-    return length
+    d = 0
+    for i in range(1,len(points)):
+        d += distance(points[ i-1], points[i])
+    return d
 
 def resample(points, n):
     I = pathLength(points) / (n - 1)
-    D = 0
-    newPoints = []
-    for i in range(len(points)):
-        if i >= 1:
-            d = distance(points[i-1], points[i])
-            if ((D + d) >= I):
-                qx = points[i-1].x + ((I - D) / d) * (points[i].x - points[i-1].x)
-                qy = points[i-1].y + ((I - D) / d) * (points[i].y - points[i-1].y)
-                newPoints.append(Point(qx,qy))
-                points.insert(i, Point(qx,qy))
-                D = 0
-            else:
-                D += d
+    D = 0.0
+    newPoints = [points[0]]
+    i = 1
+    while i < len(points):
+        d = distance(points[i-1], points[i])
+        if ((D + d) >= I):
+            qx = points[i-1].x + ((I - D) / d) * (points[i].x - points[i-1].x)
+            qy = points[i-1].y + ((I - D) / d) * (points[i].y - points[i-1].y)
+            q = Point(qx,qy)
+            newPoints.append(q)
+            points[i:0] = [q]
+            D = 0
+        else:
+            D += d
+        i += 1
+    if len(newPoints) == n - 1:
+        newPoints.append(points[len(points)-1])
     return newPoints
 
 # Step 2 Rotate points so indicative angle is 0
@@ -207,9 +211,9 @@ def translateToOrigin(points):
 # Step 4 match templates
 
 def pathDistance(pointsA, pointsB):
-    d = 0
-    for i in range(len(pointsA)):
-        d = d + distance(pointsA[i], pointsB[i])
+    d = 0.0
+    for i in range(0,len(pointsA)):
+        d += distance(pointsA[i], pointsB[i])
     return d / len(pointsA)
 
 def distanceAtAngle(points, T, theta):
@@ -240,15 +244,16 @@ def recognize(points, templates):
     b = math.inf
     negTheta = -45
     posTheta = 45
-    threshold = -2
+    threshold = 2
     size = 150
-    for i in range(len(templates)):
-        d = distanceAtBestAngle(points, templates[i], negTheta, posTheta, threshold)
+    T_prime = templates[0]
+    for T in templates:
+        d = distanceAtBestAngle(points, T, negTheta, posTheta, threshold)
         if(d < b):
             b = d
-            curTemplate = templates[i]
+            T_prime = T
     score = 1 - b / 0.5 * math.sqrt(size^2 + size^2)
-    return curTemplate, score
+    return T_prime, score
 
 # End $1 Gesture Recognition Implementation
 
@@ -265,19 +270,24 @@ for template in starterTemplates:
 
 templateNames = ["triangle", "x", "rectangle", "circle", "check", "caret", "zigZag", "arrow", "leftSquareBracket", "rightSquareBracket", "v", "delete", "leftCurlyBrace", "rightCurlyBrace", "star", "pigTail"]
 
-### Everything Below should be repeated for each gesture
+# ### Everything Below should be repeated for each gesture
 
 def findMatch(event):
-    print("Recognizing...")
+    print("Processing...")
     print("\n")
-    # drawnShape.getPoints() contains the points of the gesture drawn by the user
     # Preprocess drawnShape
     resampledDrawnShapePoints = resample(drawnShape.getPoints(), 64)
     rotatedDrawnShapePoints = rotateToZero(resampledDrawnShapePoints)
     scaledDrawnShapePoints = scaleToSquare(rotatedDrawnShapePoints, 150)
     translateToOriginPoints = translateToOrigin(scaledDrawnShapePoints)
 
+    print("Recognizing...")
+    print("\n")
+
     match, score = recognize(translateToOriginPoints, processedTemplates)
+
+    print("Recognized!")
+    print("\n")
 
     # TODO: Iterate through templates and find name
 
