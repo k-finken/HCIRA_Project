@@ -257,7 +257,9 @@ def recognize(points, templates):
         if(d < b):
             b = d
             T_prime = T
-    score = 1 - b / 0.5 * math.sqrt(size^2 + size^2)
+    # Update 150 depending on scale chosen for project
+    halfDiagonal = 0.5 * math.sqrt(150 * 150 + 150 * 150)
+    score = 1.0 - b / halfDiagonal
     return T_prime, score
 
 # End $1 Gesture Recognition Implementation
@@ -285,18 +287,15 @@ def findMatch(event):
     translateToOriginPoints = translateToOrigin(scaledDrawnShapePoints)
 
     match, score = recognize(translateToOriginPoints, processedTemplates)
-    # TODO: Iterate through templates and find name
-
     for i in range(len(processedTemplates)):
         if(processedTemplates[i] == match):
-            canvas.create_text(200, 50, text="Your drawing matches: " + templateNames[i], fill="black", font=('Helvetica 12 bold'))
+            canvas.create_text(200, 50, text="Your drawing matches: " + templateNames[i] + " with score of: " + str(score), fill="black", font=('Helvetica 12 bold'))
             break
-canvas = Canvas(app, bg='grey')
 
+canvas = Canvas(app, bg='grey')
 canvas.pack(anchor='nw', fill='both', expand=1)
 canvas.bind("<Button-1>", get_x_and_y)
 canvas.bind("<B1-Motion>", draw)
-# canvas.bind("<Tab>", clear)
 app.bind("<Tab>", clear)
 app.bind("<ButtonRelease-1>", findMatch)
 
