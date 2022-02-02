@@ -382,4 +382,18 @@ else:
     print(users[0][1][1][1].getLabel())
     print(users[1][1][1][1].getLabel())
 
+    # For Each User (total of 11) VAR U
+        # For each example (total of 10 per gesture) VAR E
+            # For 100 trials VAR I
+                # For each gesture (total of 16) VAR G
+                    # choose E templates from set(U,G) - create an array to be used in next loop
+                    # choose 1 candidate from set(U,G) - create an array to be used in next loop
+                # For each candidate T from 1 to G
+                    # call recognize(T.points(), E)
+                    # if recognize(T.points(), E) > 0.5
+                        # reco score for each set(U,G) += 1
+            # reco score for each set(U,G) / 100
+    # Report final average per-user accuracy
+
+
 
