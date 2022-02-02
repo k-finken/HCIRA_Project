@@ -1,13 +1,13 @@
-from contextvars import copy_context
 import math
 from tkinter import *
 import os
 import xml.etree.ElementTree as ET
+xmlMode = True
 
-from turtle import shape
-app = Tk()
-app.title("Project 1 Canvas")
-app.geometry("400x400")
+if (xmlMode == False):
+    app = Tk()
+    app.title("Project 1 Canvas")
+    app.geometry("400x400")
 
 # X and Y point class
 class Point:
@@ -26,8 +26,9 @@ class Point:
 # Class to Hold Drawn Canvas Points
 class Shape:
     # Initialize Shape
-    def __init__(self, points=[]):
+    def __init__(self, points=[], label=""):
         self.points = points
+        self.label = label
     # Get Points
     def getPoints(self):
         return self.points
@@ -41,9 +42,39 @@ class Shape:
     def printPoints(self):
         for i in range(len(self.points)):
             print(self.points[i].getX(), self.points[i].getY())
+    # Get Label
+    def getLabel(self):
+        return self.label
+    # Set Label
+    def setLabel(self, label):
+        self.label = label
 
 # reading xml files and storing gestures inside of array of shapes
-
+def readXML(dir, outputArr):
+    for root, dirs, files in os.walk(dir):
+        # iterates over every single file in all directories/subdirectories
+        for name in files:
+            # sets file path for current file
+            file = ET.parse(os.path.join(root, name))
+            # sets parent element of XML file ex: <Gesture>
+            parent = file.getroot()
+            # define array to store points
+            s = Shape()
+            # create gesture label
+            gestureLabel = parent.get("Name") + "," + parent.get("Subject") + "," + parent.get("Speed")
+            print(gestureLabel)
+            # sets current shape s gesture label to be the name subject and speed of current file
+            s.setLabel(gestureLabel)
+            # iterates through all children of the parents (each point of the <gesture>) and stores x and y
+            for child in parent:
+                # store x variable of point in x
+                x = int(child.get("X"))
+                # story y variable of point in y
+                y = int(child.get("Y"))
+                # add point to array of points p
+                s.addPoint(x, y)
+            # add array of points (p) as a shape object to array of Shapes
+            outputArr.append(s)    
 
 # Default Set of Templates
 # Triangle
@@ -105,11 +136,9 @@ def clear(event):
     # Clear path list
     drawnShape.clearPoints()
 
-
 def get_x_and_y(event):
     global curx, cury
     curx, cury = event.x, event.y
-
 
 def draw(event):
     global curx, cury
@@ -119,7 +148,6 @@ def draw(event):
     drawnShape.addPoint(curx, cury)
 
 # $1 Gesture Recognition
-
 PHI = 0.5 * (-1.0 + math.sqrt(5.0))
 
 # Step 1 Resample Path
@@ -250,6 +278,7 @@ def recognize(points, templates):
     negTheta = -45
     posTheta = 45
     threshold = 2
+    # Update 150 depending on size for scale chosen for project
     size = 150
     T_prime = templates[0]
     for T in templates:
@@ -257,8 +286,7 @@ def recognize(points, templates):
         if(d < b):
             b = d
             T_prime = T
-    # Update 150 depending on scale chosen for project
-    halfDiagonal = 0.5 * math.sqrt(150 * 150 + 150 * 150)
+    halfDiagonal = 0.5 * math.sqrt(size * size + size * size)
     score = 1.0 - b / halfDiagonal
     return T_prime, score
 
@@ -278,7 +306,6 @@ for template in starterTemplates:
 templateNames = ["triangle", "x", "rectangle", "circle", "check", "caret", "zigZag", "arrow", "left Square Bracket", "right Square Bracket", "v", "delete", "left Curly Brace", "right Curly Brace", "star", "pig Tail"]
 
 # ### Everything Below should be repeated for each gesture
-
 def findMatch(event):
     # Preprocess drawnShape
     resampledDrawnShapePoints = resample(drawnShape.getPoints(), 64)
@@ -292,11 +319,17 @@ def findMatch(event):
             canvas.create_text(200, 50, text="Your drawing matches: " + templateNames[i] + " with score of: " + str(score), fill="black", font=('Helvetica 12 bold'))
             break
 
-canvas = Canvas(app, bg='grey')
-canvas.pack(anchor='nw', fill='both', expand=1)
-canvas.bind("<Button-1>", get_x_and_y)
-canvas.bind("<B1-Motion>", draw)
-app.bind("<Tab>", clear)
-app.bind("<ButtonRelease-1>", findMatch)
-
-app.mainloop()
+if (xmlMode == False):
+    canvas = Canvas(app, bg='grey')
+    canvas.pack(anchor='nw', fill='both', expand=1)
+    canvas.bind("<Button-1>", get_x_and_y)
+    canvas.bind("<B1-Motion>", draw)
+    app.bind("<Tab>", clear)
+    app.bind("<ButtonRelease-1>", findMatch)
+    app.mainloop()
+else:
+    xmlTemplates = []
+    readXML("xml", xmlTemplates)
+    print("------")
+    print(xmlTemplates[0].getLabel())
+    print(len(xmlTemplates[0].getPoints()))
