@@ -49,32 +49,65 @@ class Shape:
     def setLabel(self, label):
         self.label = label
 
+# # reading xml files and storing gestures inside of array of shapes
+# def readXML(dir, outputArr):
+#     for root, dirs, files in os.walk(dir):
+#         # iterates over every single file in all directories/subdirectories
+#         for name in files:
+#             # sets file path for current file
+#             file = ET.parse(os.path.join(root, name))
+#             # sets parent element of XML file ex: <Gesture>
+#             parent = file.getroot()
+#             # define array to store points
+#             s = Shape()
+#             # create gesture label
+#             gestureLabel = parent.get("Name") + "," + parent.get("Subject") + "," + parent.get("Speed")
+#             print(gestureLabel)
+#             # sets current shape s gesture label to be the name subject and speed of current file
+#             s.setLabel(gestureLabel)
+#             # iterates through all children of the parents (each point of the <gesture>) and stores x and y
+#             for child in parent:
+#                 # store x variable of point in x
+#                 x = int(child.get("X"))
+#                 # story y variable of point in y
+#                 y = int(child.get("Y"))
+#                 # add point to array of points p
+#                 s.addPoint(x, y)
+#             # add array of points (p) as a shape object to array of Shapes
+#             outputArr.append(s)    
+
 # reading xml files and storing gestures inside of array of shapes
-def readXML(dir, outputArr):
-    for root, dirs, files in os.walk(dir):
-        # iterates over every single file in all directories/subdirectories
-        for name in files:
-            # sets file path for current file
-            file = ET.parse(os.path.join(root, name))
-            # sets parent element of XML file ex: <Gesture>
-            parent = file.getroot()
-            # define array to store points
-            s = Shape()
-            # create gesture label
-            gestureLabel = parent.get("Name") + "," + parent.get("Subject") + "," + parent.get("Speed")
-            print(gestureLabel)
-            # sets current shape s gesture label to be the name subject and speed of current file
-            s.setLabel(gestureLabel)
-            # iterates through all children of the parents (each point of the <gesture>) and stores x and y
-            for child in parent:
-                # store x variable of point in x
+def readXML(rootDir):
+    outputArr = []
+    for subdir, dirs, files in os.walk(rootDir, topdown=True):
+        # Sorts order to ensure consistency across platforms
+        dirs.sort(reverse=False)
+        files.sort(reverse=False)
+        for file in files:
+            # Read in as XML
+            xmlFile = ET.parse(os.path.join(subdir, file))
+            # Get root element
+            root = xmlFile.getroot()
+            # Get gesture label
+            gestureLabel = root.get("Name") + "," + root.get("Subject") + "," + root.get("Speed")
+            # print(gestureLabel)
+            # Get Points
+            points = []
+            for child in root:
+                # Store x variable of point in x
                 x = int(child.get("X"))
                 # story y variable of point in y
                 y = int(child.get("Y"))
                 # add point to array of points p
-                s.addPoint(x, y)
-            # add array of points (p) as a shape object to array of Shapes
-            outputArr.append(s)    
+                points.append(Point(x, y))
+
+            # Create shape
+            s = Shape(points, gestureLabel)
+            # Add shape to array
+            outputArr.append(s)
+
+    return outputArr
+
 
 # Default Set of Templates
 # Triangle
@@ -328,8 +361,7 @@ if (xmlMode == False):
     app.bind("<ButtonRelease-1>", findMatch)
     app.mainloop()
 else:
-    xmlTemplates = []
-    readXML("xml", xmlTemplates)
+    xmlTemplates = readXML("xml")
     print("------")
     print(xmlTemplates[0].getLabel())
     print(len(xmlTemplates[0].getPoints()))
