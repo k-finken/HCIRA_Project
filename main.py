@@ -338,13 +338,11 @@ else:
         scaledTemplatePoints = scaleToSquare(rotatedTemplatePoints, 150)
         translateToOriginPoints = translateToOrigin(scaledTemplatePoints)
         processedXMLTemplates.append(Shape(translateToOriginPoints, template.getLabel()))
-
-    # Seperate xml templates based on user users[user[fast[16 arrays, one per gesture], medium[16 arrays, one per gesture], slow[16 arrays, one per gesture]]] Note: user number is offset by 1
-    # users = [[[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]],[[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]],[[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]],[[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]],[[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]],[[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]],[[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]],[[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]],[[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]],[[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]],[[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]]]
-    # Iterate through processed templates
     
     # Seperate xml templates based on user users[user[fast[16 arrays, one per gesture], medium[16 arrays, one per gesture], slow[16 arrays, one per gesture]]] Note: user number is offset by 1
-    users = [[[None] * 16] * 3] * 11
+    users = [[[[Shape()] * 10] * 16] * 3] * 11
+
+    # users[user][speed][gesture][trial number]
 
     gestureNames = ['arrow','caret','check','circle','delete_mark','left_curly_brace','left_sq_bracket','pigtail','question_mark','rectangle','right_curly_brace','right_sq_bracket','star','triangle','v','x']
 
@@ -353,9 +351,6 @@ else:
         templateName = template.getLabel()
         # Parse template name
         parsedName = templateName.split(",")
-        # Get name of gesture and find index
-        gestureName = parsedName[0][:(len(parsedName[0]) - 2)]
-        gestureIndex = gestureNames.index(gestureName)
         # Place in correct user array
         userNumber = int(parsedName[1]) - 1
         # Find the speed index
@@ -368,18 +363,43 @@ else:
             userSpeed = 2
         else:
             userSpeed = 3
+        # Get name of gesture and find index
+        gestureName = parsedName[0][:(len(parsedName[0]) - 2)]
+        gestureIndex = gestureNames.index(gestureName)
+        gestureNumber = int(parsedName[0][-2:]) - 1
 
-        # print(userNumber, userSpeed, gestureIndex)
-        if (users[userNumber][userSpeed][gestureIndex] == None):
-            users[userNumber][userSpeed][gestureIndex] = [template]
-        else:
-            users[userNumber][userSpeed][gestureIndex].append(template)
+        print(parsedName)
+        print(userNumber, userSpeed, gestureIndex, gestureNumber)
+
+        users[userNumber][userSpeed][gestureIndex][gestureNumber] = Shape(template.getPoints(), templateName)
+
+        print(users[userNumber][userSpeed][gestureIndex][gestureNumber].getLabel())
+
+    print("-----")
+
+    print(users[0][0][0][0].getLabel())
+    print(users[0][0][0][1].getLabel())
+    print(users[0][0][1][0].getLabel())
+    print(users[0][0][1][1].getLabel())
+    print(users[0][1][0][0].getLabel())
+    print(users[1][0][0][0].getLabel())
+    print(users[10][2][15][9].getLabel())
+    print(users[10][1][4][1].getLabel())
+
+    # print(len(users))
+    # print(len(users[0]))
+    # print(len(users[0][0]))
+    # print(len(users[0][0][0]))
+    # print(users[0][0])
+    # print(count)
+    # for x in users[0][0][0]:
+    #     print(x.getLabel())
 
     # #  Loop over dataset
-    # # for each user 1 to 10
+    # for each user
     # for user in users:
     # # for each example 0 to 9
-    #     for example in range(10):
+    #     for example in range(len(users[0][0][0])):
     # # for 1 to 100
     #         for i in range(100):
     #             print(i)
