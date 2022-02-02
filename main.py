@@ -337,4 +337,26 @@ else:
         rotatedTemplatePoints = rotateToZero(resampledTemplatePoints)
         scaledTemplatePoints = scaleToSquare(rotatedTemplatePoints, 150)
         translateToOriginPoints = translateToOrigin(scaledTemplatePoints)
-        processedXMLTemplates.append(Shape(translateToOriginPoints))
+        processedXMLTemplates.append(Shape(translateToOriginPoints, template.getLabel()))
+
+    # Seperate xml templates based on user users[user[fast[], medium[], slow[]]] Note: user number is offset by 1
+    users = [[[],[],[]],[[],[],[]],[[],[],[]],[[],[],[]],[[],[],[]],[[],[],[]],[[],[],[]],[[],[],[]],[[],[],[]],[[],[],[]],[[],[],[]]]
+    # Iterate through processed templates
+    for template in processedXMLTemplates:
+        # Get template name
+        templateName = template.getLabel()
+        # Parse template name
+        parsedName = templateName.split(",")
+        # Place in correct user array
+        userNumber = int(parsedName[1]) - 1
+        # Find the speed index
+        userSpeed = 0
+        if (parsedName[2] == 'fast'):
+            userSpeed = 0
+        elif (parsedName[2] == 'medium'):
+            userSpeed = 1
+        elif (parsedName[2] == 'slow'):
+            userSpeed = 2
+        else:
+            userSpeed = 3
+        users[userNumber][userSpeed].append(template)
