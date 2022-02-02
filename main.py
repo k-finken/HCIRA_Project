@@ -339,14 +339,23 @@ else:
         translateToOriginPoints = translateToOrigin(scaledTemplatePoints)
         processedXMLTemplates.append(Shape(translateToOriginPoints, template.getLabel()))
 
-    # Seperate xml templates based on user users[user[fast[], medium[], slow[]]] Note: user number is offset by 1
-    users = [[[],[],[]],[[],[],[]],[[],[],[]],[[],[],[]],[[],[],[]],[[],[],[]],[[],[],[]],[[],[],[]],[[],[],[]],[[],[],[]],[[],[],[]]]
+    # Seperate xml templates based on user users[user[fast[16 arrays, one per gesture], medium[16 arrays, one per gesture], slow[16 arrays, one per gesture]]] Note: user number is offset by 1
+    # users = [[[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]],[[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]],[[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]],[[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]],[[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]],[[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]],[[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]],[[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]],[[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]],[[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]],[[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]]]
     # Iterate through processed templates
+    
+    # Seperate xml templates based on user users[user[fast[16 arrays, one per gesture], medium[16 arrays, one per gesture], slow[16 arrays, one per gesture]]] Note: user number is offset by 1
+    users = [[[None] * 16] * 3] * 11
+
+    gestureNames = ['arrow','caret','check','circle','delete_mark','left_curly_brace','left_sq_bracket','pigtail','question_mark','rectangle','right_curly_brace','right_sq_bracket','star','triangle','v','x']
+
     for template in processedXMLTemplates:
         # Get template name
         templateName = template.getLabel()
         # Parse template name
         parsedName = templateName.split(",")
+        # Get name of gesture and find index
+        gestureName = parsedName[0][:(len(parsedName[0]) - 2)]
+        gestureIndex = gestureNames.index(gestureName)
         # Place in correct user array
         userNumber = int(parsedName[1]) - 1
         # Find the speed index
@@ -359,4 +368,20 @@ else:
             userSpeed = 2
         else:
             userSpeed = 3
-        users[userNumber][userSpeed].append(template)
+
+        # print(userNumber, userSpeed, gestureIndex)
+        if (users[userNumber][userSpeed][gestureIndex] == None):
+            users[userNumber][userSpeed][gestureIndex] = [template]
+        else:
+            users[userNumber][userSpeed][gestureIndex].append(template)
+
+    # #  Loop over dataset
+    # # for each user 1 to 10
+    # for user in users:
+    # # for each example 0 to 9
+    #     for example in range(10):
+    # # for 1 to 100
+    #         for i in range(100):
+    #             print(i)
+
+
