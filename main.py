@@ -377,31 +377,9 @@ else:
 
     print("-----")
 
-    print(users[0][0][0][0].getLabel())
     print(users[0][0][0][1].getLabel())
-    print(users[0][0][1][0].getLabel())
     print(users[0][0][1][1].getLabel())
-    print(users[0][1][0][0].getLabel())
-    print(users[1][0][0][0].getLabel())
-    print(users[10][2][15][9].getLabel())
-    print(users[10][1][4][1].getLabel())
-
-    # print(len(users))
-    # print(len(users[0]))
-    # print(len(users[0][0]))
-    # print(len(users[0][0][0]))
-    # print(users[0][0])
-    # print(count)
-    # for x in users[0][0][0]:
-    #     print(x.getLabel())
-
-    # #  Loop over dataset
-    # for each user
-    # for user in users:
-    # # for each example 0 to 9
-    #     for example in range(len(users[0][0][0])):
-    # # for 1 to 100
-    #         for i in range(100):
-    #             print(i)
+    print(users[0][1][1][1].getLabel())
+    print(users[1][1][1][1].getLabel())
 
 
