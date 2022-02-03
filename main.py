@@ -410,10 +410,11 @@ else:
         for p in range(len(userAccuracy)):
             totalUserAccuracy += userAccuracy[p]
         avgUserAccuracy.append(totalUserAccuracy / len(userAccuracy))
-
     for a in range(len(avgUserAccuracy)):
-        print("User: " + a)
-        print("Accuracy: " + avgUserAccuracy[a])
+        print("User: ")
+        print(a)
+        print("Accuracy: ")
+        print(avgUserAccuracy[a])
 
 
 
