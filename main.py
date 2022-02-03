@@ -382,6 +382,42 @@ else:
     print(users[0][1][1][1].getLabel())
     print(users[1][1][1][1].getLabel())
 
+    avgUserAccuracy = []
+    userAccuracy = []
+    print("starting your code")
+    for user in range(1,11):
+        print("running user: ")
+        print(user)
+        for example in range(1, 9):
+            print(example)
+            for i in range(100):
+                templateSet = []
+                candidateSet = []
+                recoScore = 0
+                for gestureNum in range(0,15):
+                    # not sure if this should be defined inside or outside this for loop
+                    #choose E templates from U,G set
+                    for j in range(example):
+                        # add example number of the same templates with user: user, speed: fast, gestureType: gestureNum, number: example to template set
+                        templateSet.append(users[user][0][gestureNum][example])
+                    # picked 3 arbitrarily as I wasn't positive what to put in that spot
+                    candidateSet.append(users[user][0][gestureNum][example])
+                for l in range(0, 15):
+                    match, score = recognize(candidateSet[l].getPoints(), templateSet)
+                    if(match.getLabel() == candidateSet[l].getLabel()):
+                        recoScore += 1
+            userAccuracy.append(recoScore / 100)
+        totalUserAccuracy = 0
+        for p in range(len(userAccuracy)):
+            totalUserAccuracy += userAccuracy[p]
+        avgUserAccuracy.append(totalUserAccuracy / len(userAccuracy))
+
+    for a in range(len(avgUserAccuracy)):
+        print("User: " + a)
+        print("Accuracy: " + avgUserAccuracy[a])
+
+
+
     # For Each User (total of 11) VAR U
         # For each example (total of 10 per gesture) VAR E
             # For 100 trials VAR I
