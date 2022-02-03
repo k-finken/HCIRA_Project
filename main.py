@@ -400,7 +400,6 @@ else:
                     for j in range(example):
                         # add example number of the same templates with user: user, speed: fast, gestureType: gestureNum, number: example to template set
                         templateSet.append(users[user][0][gestureNum][example])
-                    # picked 3 arbitrarily as I wasn't positive what to put in that spot
                     candidateSet.append(users[user][0][gestureNum][example])
                 for l in range(0, 15):
                     match, score = recognize(candidateSet[l].getPoints(), templateSet)
