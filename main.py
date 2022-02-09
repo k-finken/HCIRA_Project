@@ -63,7 +63,6 @@ def readXML(rootDir):
             root = xmlFile.getroot()
             # Get gesture label
             gestureLabel = root.get("Name") + "," + root.get("Subject") + "," + root.get("Speed")
-            # print(gestureLabel)
             # Get Points
             points = []
             for child in root:
@@ -378,9 +377,13 @@ else:
     print("-----")
 
     print(users[0][0][0][1].getLabel())
-    print(users[0][0][1][1].getLabel())
+    print(users[0][0][1][2].getLabel())
     print(users[0][1][1][1].getLabel())
     print(users[1][1][1][1].getLabel())
+
+    test = users[0][0][0][1].getPoints()
+    for i in range(len(users[0][0][0][1].getPoints())):
+        print("point: " + str(i) + ", X: " + str(test[i].getX()) + ", Y: " + str(test[i].getY()))
 
     avgUserAccuracy = []
     userAccuracy = []
