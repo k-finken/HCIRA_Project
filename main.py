@@ -357,11 +357,6 @@ else:
             for k in range(0, trialNum):
                 users[i][j].append(Shape())
 
-    print("Number of Users: ",len(users))
-    print("Number of Gestures Per User: ", len(users[0]))
-    print("Number of Trials Per Gesture: ",len(users[0][0]))
-    print(users[0][0])
-
     gestureNames = ['arrow','caret','check','circle','delete_mark','left_curly_brace','left_sq_bracket','pigtail','question_mark','rectangle','right_curly_brace','right_sq_bracket','star','triangle','v','x']
 
     for template in processedXMLTemplates:
@@ -381,9 +376,6 @@ else:
 
     # Use printing here for tests to make sure in array correctly
     # users[user][gesture][trial number]
-    print(users[0][0][1].getLabel())
-    print(users[0][1][1].getLabel())
-    print(users[1][1][1].getLabel())
 
     # # test = users[0][0][0][1].getPoints()
     # # for i in range(len(users[0][0][0][1].getPoints())):
@@ -395,17 +387,13 @@ else:
     avgUserAccuracy = []
     userAccuracy = []
     count = 0
-    print("starting your code")
     with open('logfile.csv', 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(["User", "Gesture Type", "Number of Templates (E)", "Count", "Reco Result (1 if correct, 0 if incorrect)","Reco Score"])
         for user in range(1,11):
-            print("running user: ")
             print(user)
             for example in range(1, 9):
-                print("Trial", example)
                 for i in range(1):
-                    print("Iteration", i)
                     templateSet = []
                     candidateSet = []
                     recoScore = 0
@@ -420,14 +408,14 @@ else:
                     for l in range(0, 15):
                         match, score = recognize(candidateSet[l].getPoints(), templateSet)
                         matchLabel = match.getLabel().split(',')[0]
-                        matchLabel = matchLabel[:-3]
+                        matchLabel = matchLabel[:-2]
                         candidateLabel = candidateSet[l].getLabel().split(',')[0]
-                        candidateLabel = candidateLabel[:-3]
+                        candidateLabel = candidateLabel[:-2]
                         if(matchLabel == candidateLabel):
                             recoScore += 1
-                            writer.writerow([user, gestureNum, example, count, "1", score])
+                            writer.writerow([user, matchLabel, example, count, "1", score])
                         else:
-                            writer.writerow([user, gestureNum, example, count, "0", score])
+                            writer.writerow([user, candidateLabel, example, count, "0", score])
                 balancedRecoScore = recoScore / 16
                 userAccuracy.append(balancedRecoScore / 1)
             totalUserAccuracy = 0
