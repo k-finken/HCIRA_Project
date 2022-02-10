@@ -28,6 +28,10 @@ These functions are defined from lines 212-255, and also utilize the point class
 
 2/3
 
+//**HOW TO USE**//
+To run, open the executable located in the dist folder.
+This will take some time to process, but will slowly fill up the logfile with data, and once it reaches the end of the logfile it will showcase the total average accuracy for each user and for all users inside of the csv file.
+
 //**COMPONENTS**//
 1. Read in Dataset:
 Function readXML(rootDir) on line 53 serves to read in all the data from the folder labeled xml. This iterative process goes through each file in a top down approach and creates Shape() objects from the provided points. Later after resampling, the data is separated on lines 349-374 by user, speed, gesture, and trial (NOTE: this part of the code is currently bugged, the users[] array presents differently in the loop where data is added vs outside of the loop)
