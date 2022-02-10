@@ -2,6 +2,7 @@ import math
 from tkinter import *
 import os
 import xml.etree.ElementTree as ET
+import numpy as np
 xmlMode = True
 
 if (xmlMode == False):
@@ -35,6 +36,9 @@ class Shape:
     # Add Point
     def addPoint(self, x, y):
         self.points.append(Point(x, y))
+    # Add Points
+    def setPoints(self, points):
+        self.points = points
     # Clear Points
     def clearPoints(self):
         self.points = []
@@ -339,9 +343,27 @@ else:
         processedXMLTemplates.append(Shape(translateToOriginPoints, template.getLabel()))
     
     # Seperate xml templates based on user users[user[fast[16 arrays, one per gesture], medium[16 arrays, one per gesture], slow[16 arrays, one per gesture]]] Note: user number is offset by 1
-    users = [[[[Shape()] * 10] * 16] * 3] * 11
+    # users = [[[Shape()] * 10] * 16] * 11
 
-    # users[user][speed][gesture][trial number]
+    # users[user][gesture][trial number]
+
+    userNum = 11
+    gestureNum = 16
+    trialNum = 10
+
+    users = []
+
+    for i in range(0, userNum):
+        users.append([])
+        for j in range(0, gestureNum):
+            users[i].append([])
+            for k in range(0, trialNum):
+                users[i][j].append(Shape())
+
+    print("Number of Users: ",len(users))
+    print("Number of Gestures Per User: ", len(users[0]))
+    print("Number of Trials Per Gesture: ",len(users[0][0]))
+    print(users[0][0])
 
     gestureNames = ['arrow','caret','check','circle','delete_mark','left_curly_brace','left_sq_bracket','pigtail','question_mark','rectangle','right_curly_brace','right_sq_bracket','star','triangle','v','x']
 
@@ -352,72 +374,64 @@ else:
         parsedName = templateName.split(",")
         # Place in correct user array
         userNumber = int(parsedName[1]) - 1
-        # Find the speed index
-        userSpeed = 0
-        if (parsedName[2] == 'fast'):
-            userSpeed = 0
-        elif (parsedName[2] == 'medium'):
-            userSpeed = 1
-        elif (parsedName[2] == 'slow'):
-            userSpeed = 2
-        else:
-            userSpeed = 3
         # Get name of gesture and find index
         gestureName = parsedName[0][:(len(parsedName[0]) - 2)]
         gestureIndex = gestureNames.index(gestureName)
         gestureNumber = int(parsedName[0][-2:]) - 1
 
         print(parsedName)
-        print(userNumber, userSpeed, gestureIndex, gestureNumber)
+        print(userNumber, gestureIndex, gestureNumber)
 
-        users[userNumber][userSpeed][gestureIndex][gestureNumber] = Shape(template.getPoints(), templateName)
+        users[userNumber][gestureIndex][gestureNumber].setLabel(templateName)
+        users[userNumber][gestureIndex][gestureNumber].setPoints(template.getPoints())
 
-        print(users[userNumber][userSpeed][gestureIndex][gestureNumber].getLabel())
+        print(users[userNumber][gestureIndex][gestureNumber].getLabel())
 
     print("-----")
 
-    print(users[0][0][0][1].getLabel())
-    print(users[0][0][1][2].getLabel())
-    print(users[0][1][1][1].getLabel())
-    print(users[1][1][1][1].getLabel())
+    # users[user][gesture][trial number]
 
-    test = users[0][0][0][1].getPoints()
-    for i in range(len(users[0][0][0][1].getPoints())):
-        print("point: " + str(i) + ", X: " + str(test[i].getX()) + ", Y: " + str(test[i].getY()))
+    print(users[0][0][1].getLabel())
+    print(users[0][1][1].getLabel())
+    print(users[1][1][1].getLabel())
 
-    avgUserAccuracy = []
-    userAccuracy = []
-    print("starting your code")
-    for user in range(1,11):
-        print("running user: ")
-        print(user)
-        for example in range(1, 9):
-            print(example)
-            for i in range(100):
-                templateSet = []
-                candidateSet = []
-                recoScore = 0
-                for gestureNum in range(0,15):
-                    # not sure if this should be defined inside or outside this for loop
-                    #choose E templates from U,G set
-                    for j in range(example):
-                        # add example number of the same templates with user: user, speed: fast, gestureType: gestureNum, number: example to template set
-                        templateSet.append(users[user][0][gestureNum][example])
-                    candidateSet.append(users[user][0][gestureNum][example])
-                for l in range(0, 15):
-                    match, score = recognize(candidateSet[l].getPoints(), templateSet)
-                    if(match.getLabel() == candidateSet[l].getLabel()):
-                        recoScore += 1
-            userAccuracy.append(recoScore / 100)
-        totalUserAccuracy = 0
-        for p in range(len(userAccuracy)):
-            totalUserAccuracy += userAccuracy[p]
-        avgUserAccuracy.append(totalUserAccuracy / len(userAccuracy))
-    for a in range(len(avgUserAccuracy)):
-        print("User: ")
-        print(a)
-        print("Accuracy: ")
-        print(avgUserAccuracy[a])
+    # # test = users[0][0][0][1].getPoints()
+    # # for i in range(len(users[0][0][0][1].getPoints())):
+    # #     print("point: " + str(i) + ", X: " + str(test[i].getX()) + ", Y: " + str(test[i].getY()))
+
+    # avgUserAccuracy = []
+    # userAccuracy = []
+    # print("starting your code")
+    # for user in range(1,11):
+    #     print("running user: ")
+    #     print(user)
+    #     for example in range(1, 9):
+    #         print(example)
+    #         for i in range(100):
+    #             templateSet = []
+    #             candidateSet = []
+    #             recoScore = 0
+    #             for gestureNum in range(0,15):
+    #                 # not sure if this should be defined inside or outside this for loop
+    #                 #choose E templates from U,G set
+    #                 for j in range(example):
+    #                     # add example number of the same templates with user: user, speed: fast, gestureType: gestureNum, number: example to template set
+    #                     templateSet.append(users[user][0][gestureNum][example])
+    #                 candidateSet.append(users[user][0][gestureNum][example])
+    #             for l in range(0, 15):
+    #                 match, score = recognize(candidateSet[l].getPoints(), templateSet)
+    #                 if(match.getLabel() == candidateSet[l].getLabel()):
+    #                     recoScore += 1
+    #         userAccuracy.append(recoScore / 100)
+    #     totalUserAccuracy = 0
+    #     for p in range(len(userAccuracy)):
+    #         totalUserAccuracy += userAccuracy[p]
+    #     avgUserAccuracy.append(totalUserAccuracy / len(userAccuracy))
+    # for a in range(len(avgUserAccuracy)):
+    #     print("User: ")
+    #     print(a)
+    #     print("Accuracy: ")
+    #     print(avgUserAccuracy[a])
 
 
 
