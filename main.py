@@ -391,9 +391,8 @@ else:
         writer = csv.writer(file)
         writer.writerow(["User", "Gesture Type", "Number of Templates (E)", "Count", "Reco Result (1 if correct, 0 if incorrect)","Reco Score"])
         for user in range(1,11):
-            print(user)
             for example in range(1, 9):
-                for i in range(1):
+                for i in range(100):
                     templateSet = []
                     candidateSet = []
                     recoScore = 0
@@ -417,7 +416,7 @@ else:
                         else:
                             writer.writerow([user, candidateLabel, example, count, "0", score])
                 balancedRecoScore = recoScore / 16
-                userAccuracy.append(balancedRecoScore / 1)
+                userAccuracy.append(balancedRecoScore / 100)
             totalUserAccuracy = 0
             for p in range(len(userAccuracy)):
                 totalUserAccuracy += userAccuracy[p]
