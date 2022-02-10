@@ -389,45 +389,55 @@ else:
     # # for i in range(len(users[0][0][0][1].getPoints())):
     # #     print("point: " + str(i) + ", X: " + str(test[i].getX()) + ", Y: " + str(test[i].getY()))
 
+    with open('logfile.csv', 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(["User", "Gesture Type", "Number of Templates (E)", "Count", "Reco Result (1 if correct, 0 if incorrect)","Reco Score"])
     avgUserAccuracy = []
     userAccuracy = []
+    count = 0
     print("starting your code")
-    for user in range(1,11):
-        print("running user: ")
-        print(user)
-        for example in range(1, 9):
-            print("Trial", example)
-            for i in range(100):
-                print("Iteration", i)
-                templateSet = []
-                candidateSet = []
-                recoScore = 0
-                for gestureNum in range(0,15):
-                    # not sure if this should be defined inside or outside this for loop
-                    #choose E templates from U,G set
-                    for j in range(example):
-                        # add example number of the same templates with user: user, speed: fast, gestureType: gestureNum, number: example to template set
-                        templateSet.append(users[user][gestureNum][j])
-                    candidateSet.append(users[user][gestureNum][example])
-                for l in range(0, 15):
-                    match, score = recognize(candidateSet[l].getPoints(), templateSet)
-                    matchLabel = match.getLabel().split(',')[0]
-                    matchLabel = matchLabel[:-3]
-                    candidateLabel = candidateSet[l].getLabel().split(',')[0]
-                    candidateLabel = candidateLabel[:-3]
-                    if(matchLabel == candidateLabel):
-                        recoScore += 1
-            balancedRecoScore = recoScore / 16
-            userAccuracy.append(balancedRecoScore / 100)
-        totalUserAccuracy = 0
-        for p in range(len(userAccuracy)):
-            totalUserAccuracy += userAccuracy[p]
-        avgUserAccuracy.append(totalUserAccuracy / len(userAccuracy))
-    for a in range(len(avgUserAccuracy)):
-        print("User: ")
-        print(a)
-        print("Accuracy: ")
-        print(avgUserAccuracy[a])
+    with open('logfile.csv', 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(["User", "Gesture Type", "Number of Templates (E)", "Count", "Reco Result (1 if correct, 0 if incorrect)","Reco Score"])
+        for user in range(1,11):
+            print("running user: ")
+            print(user)
+            for example in range(1, 9):
+                print("Trial", example)
+                for i in range(1):
+                    print("Iteration", i)
+                    templateSet = []
+                    candidateSet = []
+                    recoScore = 0
+                    for gestureNum in range(0,15):
+                        count += 1
+                        # not sure if this should be defined inside or outside this for loop
+                        #choose E templates from U,G set
+                        for j in range(example):
+                            # add example number of the same templates with user: user, speed: fast, gestureType: gestureNum, number: example to template set
+                            templateSet.append(users[user][gestureNum][j])
+                        candidateSet.append(users[user][gestureNum][example])
+                    for l in range(0, 15):
+                        match, score = recognize(candidateSet[l].getPoints(), templateSet)
+                        matchLabel = match.getLabel().split(',')[0]
+                        matchLabel = matchLabel[:-3]
+                        candidateLabel = candidateSet[l].getLabel().split(',')[0]
+                        candidateLabel = candidateLabel[:-3]
+                        if(matchLabel == candidateLabel):
+                            recoScore += 1
+                            writer.writerow([user, gestureNum, example, count, "1", score])
+                        else:
+                            writer.writerow([user, gestureNum, example, count, "0", score])
+                balancedRecoScore = recoScore / 16
+                userAccuracy.append(balancedRecoScore / 1)
+            totalUserAccuracy = 0
+            for p in range(len(userAccuracy)):
+                totalUserAccuracy += userAccuracy[p]
+            avgUserAccuracy.append(totalUserAccuracy / len(userAccuracy))
+        writer.writerow("")
+        writer.writerow("USER ACCURACIES")
+        for a in range(len(avgUserAccuracy)):
+            writer.writerow(["User: " + str(a), "Accuracy: " + str(avgUserAccuracy[a])])
 
 
 
