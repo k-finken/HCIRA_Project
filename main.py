@@ -342,11 +342,7 @@ else:
         translateToOriginPoints = translateToOrigin(scaledTemplatePoints)
         processedXMLTemplates.append(Shape(translateToOriginPoints, template.getLabel()))
     
-    # Seperate xml templates based on user users[user[fast[16 arrays, one per gesture], medium[16 arrays, one per gesture], slow[16 arrays, one per gesture]]] Note: user number is offset by 1
-    # users = [[[Shape()] * 10] * 16] * 11
-
     # users[user][gesture][trial number]
-
     userNum = 11
     gestureNum = 16
     trialNum = 10
@@ -378,19 +374,12 @@ else:
         gestureName = parsedName[0][:(len(parsedName[0]) - 2)]
         gestureIndex = gestureNames.index(gestureName)
         gestureNumber = int(parsedName[0][-2:]) - 1
-
-        print(parsedName)
-        print(userNumber, gestureIndex, gestureNumber)
-
+        # Place in correct trial array
         users[userNumber][gestureIndex][gestureNumber].setLabel(templateName)
         users[userNumber][gestureIndex][gestureNumber].setPoints(template.getPoints())
 
-        print(users[userNumber][gestureIndex][gestureNumber].getLabel())
-
-    print("-----")
-
+    # Use printing here for tests to make sure in array correctly
     # users[user][gesture][trial number]
-
     print(users[0][0][1].getLabel())
     print(users[0][1][1].getLabel())
     print(users[1][1][1].getLabel())
@@ -432,21 +421,6 @@ else:
     #     print(a)
     #     print("Accuracy: ")
     #     print(avgUserAccuracy[a])
-
-
-
-    # For Each User (total of 11) VAR U
-        # For each example (total of 10 per gesture) VAR E
-            # For 100 trials VAR I
-                # For each gesture (total of 16) VAR G
-                    # choose E templates from set(U,G) - create an array to be used in next loop
-                    # choose 1 candidate from set(U,G) - create an array to be used in next loop
-                # For each candidate T from 1 to G
-                    # call recognize(T.points(), E)
-                    # if recognize(T.points(), E) > 0.5
-                        # reco score for each set(U,G) += 1
-            # reco score for each set(U,G) / 100
-    # Report final average per-user accuracy
 
 
 
