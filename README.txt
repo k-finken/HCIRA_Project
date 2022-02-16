@@ -44,3 +44,23 @@ Lines 385-420 serve to recreate the random-100 loop that was covered in class.
 
 4. Output the Result:
 Currently, the result of the looped tests are printed to the console on lines 413-417. CSV exporting functionality is being implemented following line 420.
+
+2/16
+//**HOW TO USE**//
+To run, open the executable located in the dist folder. Make sure to run the executable for the data-collect file. Displayed on the GUI is 
+    - The current user number in the trial
+    - The gesture the user needs to draw
+    - Instructions on how to save the gesture by hitting RETURN/ENTER and to restart by hitting TAB buttons
+    - Number of trials/samples remaining for that gesture
+
+Note: the software was written to have 6 consecutive users enter their samples. Restarting the program will overwrite the dataset. All code for data collection is in data-collect.py.
+
+//**COMPONENTS**//
+1. Write Gesture Files
+The saveXML(event) function on line 107 is called everytime the save button is pressed. This function calls Shape object function exportToXML(self, user, gesture, iteration) on line 59 that exports the current gesture in the GUI to an XML file. Attributes follow those of the dataset from the previous assignment. No preprocessing is called at this time. 
+
+2. Prompt for Specific Samples
+Prompts for the samples are written on lines 123-127 and 133-137. This details the current user number in the trial, the gesture to draw, instructions on saving/clearing, and the number of samples/trials remaining.
+
+3. Recruit 6 People / 4. Submit Full Dataset
+These parts of the assignment are external from the code base. Please see the submission on canvas to find the dataset as well as consent forms for the participants. 
