@@ -7,7 +7,7 @@ import csv
 import numpy as np
 
 # GLOBAL VARIABLES
-gestureNames = ['arrow','caret','check','circle','delete_mark','left_curly_brace','left_sq_bracket','pigtail','question_mark','rectangle','right_curly_brace','right_sq_bracket','star','triangle','v','x']
+gestureNames = ['arrow','caret','check','circle','delete_mark','left_curly_brace','left_sq_bracket','pigtail','zigzag','rectangle','right_curly_brace','right_sq_bracket','star','triangle','v','x']
 currentGestureIndex = 0
 gestureIteration = 1
 # Change this depending on previously collected data
@@ -92,7 +92,10 @@ drawnShape = Shape()
 def clear(event):
     canvas.delete('all')
     drawnShape.clearPoints()
-
+    canvas.create_text(5, 10, text="Hello User #" + str(currentUserNum), fill="black", font=('Helvetica 10 bold'),anchor=NW)
+    canvas.create_text(5, 25, text="Please draw a " + gestureNames[currentGestureIndex] + " without releasing the left mouse button.", fill="black", font=('Helvetica 8 bold'),anchor=NW)
+    canvas.create_text(5, 40, text="Submit by pressing the ENTER/RETURN button. Clear by pressing TAB.", fill="black",font=('Helvetica 8 bold'), anchor=NW)
+    canvas.create_text(5, 55, text=str(11 - gestureIteration) + " trials remaining.", fill="black",font=('Helvetica 8 bold'), anchor=NW)
 def get_x_and_y(event):
     global curx, cury
     curx, cury = event.x, event.y
@@ -121,20 +124,20 @@ def saveXML(event):
     canvas.delete('all')
     drawnShape.clearPoints()
     # Update Title
-    canvas.create_text(5, 10, text="Hello User #" + str(currentUserNum), fill="black", font=('Helvetica 12 bold'), anchor=NW)
-    canvas.create_text(5, 25, text="Please draw a " + gestureNames[currentGestureIndex] + " without releasing the left mouse button.", fill="black", font=('Helvetica 12 bold'), anchor=NW)
-    canvas.create_text(5, 40, text="Submit by pressing the ENTER/RETURN button. Clear by pressing TAB.", fill="black", font=('Helvetica 12 bold'), anchor=NW)
-    canvas.create_text(5, 55, text= str(11 - gestureIteration) + " trials remaining.", fill="black", font=('Helvetica 12 bold'), anchor=NW)
+    canvas.create_text(5, 10, text="Hello User #" + str(currentUserNum), fill="black", font=('Helvetica 10 bold'), anchor=NW)
+    canvas.create_text(5, 25, text="Please draw a " + gestureNames[currentGestureIndex] + " without releasing the left mouse button.", fill="black", font=('Helvetica 8 bold'), anchor=NW)
+    canvas.create_text(5, 40, text="Submit by pressing the ENTER/RETURN button. Clear by pressing TAB.", fill="black", font=('Helvetica 8 bold'), anchor=NW)
+    canvas.create_text(5, 55, text= str(11 - gestureIteration) + " trials remaining.", fill="black", font=('Helvetica 8 bold'), anchor=NW)
 
 # Handle Canvas
 canvas = Canvas(app, bg='grey')
 canvas.pack(anchor='nw', fill='both', expand=1)
 
 # Instructions
-canvas.create_text(5, 10, text="Hello User #" + str(currentUserNum), fill="black", font=('Helvetica 12 bold'), anchor=NW)
-canvas.create_text(5, 25, text="Please draw a " + gestureNames[currentGestureIndex] + " without releasing the left mouse button.", fill="black", font=('Helvetica 12 bold'), anchor=NW)
-canvas.create_text(5, 40, text="Submit by pressing the ENTER/RETURN button. Clear by pressing TAB.", fill="black", font=('Helvetica 12 bold'), anchor=NW)
-canvas.create_text(5, 55, text= str(11 - gestureIteration) + " trials remaining.", fill="black", font=('Helvetica 12 bold'), anchor=NW)
+canvas.create_text(5, 10, text="Hello User #" + str(currentUserNum), fill="black", font=('Helvetica 10 bold'), anchor=NW)
+canvas.create_text(5, 25, text="Please draw a " + gestureNames[currentGestureIndex] + " without releasing the left mouse button.", fill="black", font=('Helvetica 8 bold'), anchor=NW)
+canvas.create_text(5, 40, text="Submit by pressing the ENTER/RETURN button. Clear by pressing TAB.", fill="black", font=('Helvetica 8 bold'), anchor=NW)
+canvas.create_text(5, 55, text= str(11 - gestureIteration) + " trials remaining.", fill="black", font=('Helvetica 8 bold'), anchor=NW)
 
 canvas.bind("<Button-1>", get_x_and_y)
 canvas.bind("<B1-Motion>", draw)
