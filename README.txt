@@ -52,6 +52,11 @@ To run, open the executable located in the dist folder. Make sure to run the exe
     - The gesture the user needs to draw
     - Instructions on how to save the gesture by hitting RETURN/ENTER and to restart by hitting TAB buttons
     - Number of trials/samples remaining for that gesture
+    
+To view collected data from the README:  
+    - Unzip the zip file titled "Data-Collected-and-forms"
+    - Open each user file to see all data for the anonymous users
+    - Open folder called "ConsentForms" and all of them are stored as pdf's inside
 
 Note: the software was written to have 6 consecutive users enter their samples. Restarting the program will overwrite the dataset. All code for data collection is in data-collect.py.
 
