@@ -1,0 +1,30 @@
+<?xml version="1.0" ?>
+<Gesture Name="check01" Subject="02" Number="01" NumPts="27">
+	<Point X="106" Y="220"/>
+	<Point X="111" Y="222"/>
+	<Point X="115" Y="225"/>
+	<Point X="120" Y="228"/>
+	<Point X="124" Y="231"/>
+	<Point X="128" Y="234"/>
+	<Point X="130" Y="235"/>
+	<Point X="132" Y="238"/>
+	<Point X="133" Y="239"/>
+	<Point X="134" Y="241"/>
+	<Point X="136" Y="240"/>
+	<Point X="137" Y="237"/>
+	<Point X="138" Y="233"/>
+	<Point X="142" Y="227"/>
+	<Point X="144" Y="219"/>
+	<Point X="148" Y="211"/>
+	<Point X="152" Y="199"/>
+	<Point X="156" Y="187"/>
+	<Point X="161" Y="173"/>
+	<Point X="167" Y="160"/>
+	<Point X="171" Y="150"/>
+	<Point X="177" Y="140"/>
+	<Point X="182" Y="133"/>
+	<Point X="185" Y="126"/>
+	<Point X="188" Y="123"/>
+	<Point X="189" Y="121"/>
+	<Point X="189" Y="120"/>
+</Gesture>
