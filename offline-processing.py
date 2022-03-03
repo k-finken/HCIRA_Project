@@ -374,7 +374,7 @@ for template in processedData:
 timesToLoop = 1
 # users[user][trial][gesture]
 
-with open('logfile.csv', 'w', newline='') as file:
+with open('logfile_sample.csv', 'w', newline='') as file:
     writer = csv.writer(file)
     writer.writerow(["User", "Gesture Type", "Number of Templates (E)", "Reco Result (1 if correct, 0 if incorrect)","Reco Score"])
     userAverages = []
@@ -401,7 +401,6 @@ with open('logfile.csv', 'w', newline='') as file:
                     templates.extend(random.sample(users[user][trial], trial + 1))
                     # Choose random template as candidate from (users gesture set) = candidates
                     candidates.extend(random.sample(users[user][trial], 1))
-
                 # For each candidate
                 for candidate in candidates:
                     # call recognizer on candidate and with E templates

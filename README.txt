@@ -69,3 +69,13 @@ Prompts for the samples are written on lines 123-127 and 133-137. This details t
 
 3. Recruit 6 People / 4. Submit Full Dataset
 These parts of the assignment are external from the code base. Please see the submission on canvas to find the dataset as well as consent forms for the participants. 
+
+3/3
+
+//**INSIGHTS**//
+For all gestures across the heat map one insight we can make instantly is that most users input is concentrated on the start and stop points of each gesture. This can be seen as the "heat" from the start
+and stop points on all gestures is much stronger than the points between the start and stop. This is most prominently shown on the bracket and brace gestures, as well as the check, caret, x, and zigzag
+gestures.
+
+One other insight we can articulate based on the heatmap is that users tend to stop for a moment at vertices for nearly all gestures. This can be seen most prominently by the bright patches 
+of orange and yellow on the triangle, star, x, delete, and rectangle gestures vertices or corners. 
