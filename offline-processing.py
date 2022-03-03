@@ -371,43 +371,56 @@ for template in processedData:
     users[userNumber][gestureNumber][gestureIndex].setPoints(template.getPoints())
 
 # CHANGE THIS FOR TESTING
-timesToLoop = 10
+timesToLoop = 1
 # users[user][trial][gesture]
-userAverages = []
-# iterate through all users
-for user in range(0, userNum):
-    # Print User Number
-    print("User: " + str(user + 1))
-    # iterate through each trial
-    trialAverages = []
-    for trial in range(0, trialNum):
-        # Print Trial Number
-        print("Trial: " + str(trial + 1))
-        # iterate through 100 times
-        recoScore = 0
-        for i in range(0, timesToLoop):
-            # Print Iteration Number
-            print("Iteration: " + str(i + 1))
-            templates = []
-            candidates = []
-            # for each gesture
-            for gesture in range(0, gestureNum):
-                # Choose (trial # of templates) from (users gesture set) = E templates
-                templates.extend(random.sample(users[user][trial], trial + 1))
-                # Choose random template as candidate from (users gesture set) = candidates
-                candidates.extend(random.sample(users[user][trial], 1))
-            # For each candidate
-            for candidate in candidates:
-                # call recognizer on candidate and with E templates
-                template, score = recognize(candidate.getPoints(), templates)
-                # If score is correct
-                if(template.getLabel() == candidate.getLabel()):
-                    # reco score for user gesture set += 1
-                    recoScore += 1
-        # Find average for user gesture set /= 100
-        trialAverages.append(recoScore / 100)
-    # report final average per user
-    userAverages.append(sum(trialAverages) / len(trialAverages))
+
+with open('logfile.csv', 'w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerow(["User", "Gesture Type", "Number of Templates (E)", "Reco Result (1 if correct, 0 if incorrect)","Reco Score"])
+    userAverages = []
+    # iterate through all users
+    for user in range(0, userNum):
+        # Print User Number
+        print("User: " + str(user + 1))
+        # iterate through each trial
+        trialAverages = []
+        for trial in range(0, trialNum):
+            # Print Trial Number
+            print("Trial: " + str(trial + 1))
+            # iterate through 100 times
+            recoScore = 0
+            for i in range(0, timesToLoop):
+                # Print Iteration Number
+                print("Iteration: " + str(i + 1))
+                templates = []
+                candidates = []
+                # for each gesture
+                trainingSet = ""
+                for gesture in range(0, gestureNum):
+                    # Choose (trial # of templates) from (users gesture set) = E templates
+                    templates.extend(random.sample(users[user][trial], trial + 1))
+                    # Choose random template as candidate from (users gesture set) = candidates
+                    candidates.extend(random.sample(users[user][trial], 1))
+
+                # For each candidate
+                for candidate in candidates:
+                    # call recognizer on candidate and with E templates
+                    template, score = recognize(candidate.getPoints(), templates)
+                    # If score is correct
+                    if(template.getLabel()[:(len(template.getLabel()) - 5)] == candidate.getLabel()[:(len(candidate.getLabel())-5)]):
+                        writer.writerow([user, template.getLabel(), trial, "1", score])
+                        # reco score for user gesture set += 1
+                        recoScore += 1
+                    else:
+                        writer.writerow([user, template.getLabel(), trial, "0", score])
+            # Find average for user gesture set /= 100
+            trialAverages.append(recoScore / timesToLoop)
+        # report final average per user
+        userAverages.append(sum(trialAverages) / len(trialAverages))
+        writer.writerow("")
+        writer.writerow("USER ACCURACIES")
+        for a in range(len(userAverages)):
+            writer.writerow(["User: " + str(a), "Accuracy: " + str(userAverages[a])])
 
 
 # with open('logfile.csv', 'w', newline='') as file:
